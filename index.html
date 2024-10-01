@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿Quieres salir conmigo?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #6a5acd, #5c4d9e); /* Fondo morado con gradiente */
+            text-align: center;
+            margin: 0;
+            padding: 50px;
+            color: white;
+            overflow: hidden; /* Para ocultar las barras de desplazamiento */
+            animation: backgroundChange 10s infinite alternate; /* Cambios de fondo */
+        }
+        @keyframes backgroundChange {
+            0% { background: #6a5acd; }
+            50% { background: #5c4d9e; }
+            100% { background: #4e3a8e; }
+        }
+        h1 {
+            font-size: 48px;
+            margin-bottom: 30px;
+            animation: fadeIn 1.5s, blink 1s infinite; /* Añadir efecto de parpadeo */
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5); /* Sombra para el texto */
+            animation: slideIn 1s; /* Animación de entrada */
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .container {
+            margin-top: 50px;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 20px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+            transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s, width 0.3s, height 0.3s; /* Suavizar transiciones */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5), 0 0 20px rgba(50, 255, 50, 0.5); /* Sombra y brillo */
+        }
+        .yes-btn {
+            background-color: #32cd32;
+            color: white;
+        }
+        .no-btn {
+            background-color: #ff6347;
+            color: white;
+        }
+        button:hover {
+            transform: scale(1.1) rotate(2deg); /* Efecto de escalado y rotación al pasar el cursor */
+            width: 160px; /* Cambiar tamaño */
+            height: 60px; /* Cambiar tamaño */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7), 0 0 30px rgba(50, 255, 50, 0.7); /* Aumentar sombra y brillo */
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #ffffff;
+            opacity: 0;
+            transition: opacity 1s, transform 0.5s; /* Suavizar la aparición del mensaje */
+        }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.8); /* Partículas más brillantes */
+            opacity: 0.7;
+            pointer-events: none;
+            filter: blur(1px); /* Añadir un poco de desenfoque */
+        }
+        .star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 255, 0, 0.9); /* Color amarillo para las estrellas */
+            border-radius: 50%;
+            animation: twinkle 1s infinite alternate; /* Efecto de titilar */
+        }
+        @keyframes twinkle {
+            0% { transform: scale(1); opacity: 0.7; }
+            100% { transform: scale(1.5); opacity: 1; }
+        }
+        .footer {
+            position: absolute;
+            bottom: 10px;
+            color: white;
+            font-size: 1.2rem;
+            text-align: center;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>¿Quieres salir conmigo?</h1>
+    <div class="container">
+        <button class="yes-btn" onclick="handleYes()">Sí</button>
+        <button class="no-btn" onclick="handleNo(event)">No</button>
+    </div>
+    <div id="message" class="message"></div>
+    
+    <div class="footer">Realizado por Miguel Sánchez</div>
+
+    <script>
+        function handleYes() {
+            const message = document.getElementById("message");
+            message.innerHTML = "¡Qué alegría! 💖 Eres increíble y me haces muy feliz.";
+            message.style.opacity = 1; // Mostrar el mensaje
+            message.style.transform = 'translateY(0)'; // Mostrar el mensaje desde abajo
+            playSound('yes-sound.mp3'); // Reproducir sonido al hacer clic en "Sí"
+            createFireworks(); // Crear efectos de fuegos artificiales
+        }
+
+        function handleNo(event) {
+            const message = document.getElementById("message");
+            message.innerHTML = "¿Estás seguro? 😢 Piensa en lo divertido que sería.";
+            message.style.opacity = 1; // Mostrar el mensaje
+            message.style.transform = 'translateY(0)'; // Mostrar el mensaje desde abajo
+            playSound('no-sound.mp3'); // Reproducir sonido al hacer clic en "No"
+            moveNoButton(event); // Mover el botón "No"
+        }
+
+        function moveNoButton(event) {
+            const button = event.currentTarget; // Obtener el botón que fue clickeado
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+
+            // Calcular nuevas posiciones aleatorias
+            const newX = Math.random() * (windowWidth - button.offsetWidth);
+            const newY = Math.random() * (windowHeight - button.offsetHeight);
+
+            // Mover el botón a la nueva posición
+            button.style.position = 'absolute'; // Para que funcione el movimiento
+            button.style.left = newX + 'px';
+            button.style.top = newY + 'px';
+
+            // Llamar a la función nuevamente después de un corto período
+            setTimeout(() => moveNoButton(event), 500); // Se mueve cada medio segundo
+        }
+
+        function playSound(soundFile) {
+            const audio = new Audio(soundFile);
+            audio.play();
+        }
+
+        // Crear partículas que no desaparecen
+        for (let i = 0; i < 100; i++) {
+            createParticle();
+        }
+
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            const size = Math.random() * 5 + 5; // Tamaño aleatorio
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+            particle.style.top = Math.random() * window.innerHeight + 'px';
+            particle.style.left = Math.random() * window.innerWidth + 'px';
+            document.body.appendChild(particle);
+
+            // Movimiento de partículas
+            const moveX = (Math.random() - 0.5) * 2; // Movimiento horizontal
+            const moveY = (Math.random() - 0.5) * 2; // Movimiento vertical
+            particle.animate([
+                { transform: `translate(0, 0)` },
+                { transform: `translate(${moveX * 200}px, ${moveY * 200}px)` },
+            ], {
+                duration: Math.random() * 5000 + 5000,
+                iterations: Infinity,
+                easing: 'ease-in-out'
+            });
+        }
+
+        // Crear estrellas brillantes
+        setInterval(() => {
+            createStar();
+        }, 500);
+
+        function createStar() {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            star.style.top = Math.random() * 100 + 'vh'; // Posición vertical
+            star.style.left = Math.random() * 100 + 'vw'; // Posición horizontal
+            document.body.appendChild(star);
+
+            // Desaparecer después de un tiempo
+            setTimeout(() => {
+                star.remove();
+            }, 1000); // Eliminar después de 1 segundo
+        }
+    </script>
+</body>
+</html>
